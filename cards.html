@@ -1,0 +1,92 @@
+<script>
+    let deckOfCards = GenerateDeck();
+    let shuffledDeckOfCards = shuffle(deckOfCards);
+    console.log(shuffledDeckOfCards);
+
+    do {
+        let topOne = getTopCard(shuffledDeckOfCards);
+        let topTwo = getSecondTopCard(shuffledDeckOfCards);    
+
+        //Hvis top1 mindre end top2 med 1 imellem SWAP
+        if (topTwo - topOne == 1) {
+            MoveTopCardToBottom(shuffledDeckOfCards);
+            continue;
+        }
+
+        //Hvis top1 mindre end top2 med flere imellem EXCHANGE
+        if (topOne < topTwo) {
+            ExchangeTwoTopCards(shuffledDeckOfCards);
+            continue;
+        }
+
+        //Hvis top1 storre end top2 med 1 imellem EXCHANGE
+        if (topOne - topTwo == 1) {
+            ExchangeTwoTopCards(shuffledDeckOfCards);
+            continue;
+        }
+
+        //Hvis top1 storre end top2 med flere imellem SWAP
+        if (topOne > topTwo) {
+            MoveTopCardToBottom(shuffledDeckOfCards);
+            continue;
+        }
+    }
+    while(isSorted(shuffledDeckOfCards) == false);
+
+    console.log(shuffledDeckOfCards);
+
+    function MoveTopCardToBottom(array) {
+        array.push(array[0]);
+        array.shift();
+    }
+
+    function ExchangeTwoTopCards(array) {
+        let tempTopCard = getTopCard(array);
+        array[0] = array[1];
+        array[1] = tempTopCard;
+    }
+
+    function getTopCard(array) {
+        return array[0];
+    }
+
+    function getSecondTopCard(array) {
+        return array[1];
+    }
+    function GenerateDeck() {
+        let tempArray = new Array();
+        for (var i = 1; i <= 52; i++) {
+            tempArray.push(i);
+        }
+        return tempArray;
+    }
+
+    function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+
+        return array;
+    }
+
+    function isSorted(array) {
+        var len = array.length - 1;
+        for (var i = 0; i < len; ++i) {
+            if (array[i] > array[i + 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+</script>

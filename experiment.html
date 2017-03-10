@@ -1,0 +1,165 @@
+<script>
+    let DoubleUps = 5;
+    let ValidateRuns = 5;
+
+    console.log('---Running SelectionSort---');
+    RunSort(DoubleUps, SelectionSort, ValidateRuns);
+    console.log('----------------------------------------');
+
+    console.log('---Running InsertionSort---');
+    RunSort(DoubleUps, InsertionSort, ValidateRuns);
+    console.log('----------------------------------------');
+
+    console.log('---Running MergeSort---');
+    RunSort(DoubleUps, MergeSort, ValidateRuns);
+    console.log('----------------------------------------');
+
+    function RunSort(numberOfTimesArrayMustDouble, SortingAlgorithm, runTimes) {
+        // Contains data about the algorithm
+        let data = new Array();
+
+        // Number of times we want to double the array
+        for (let doublings = 1; doublings <= numberOfTimesArrayMustDouble; doublings++) {
+            let totalSeconds = 0;
+            let integerArray = new Array();
+            for (let i = 0; i < runTimes; i++) {
+                // Array containing values
+                integerArray = new Array();
+                doubleArray(integerArray, doublings);
+                // Shuffle the array
+                shuffle(integerArray);
+
+                // Start timer
+                var startDate = new Date();
+                // Begin Chosen SortingAlgorithm
+                SortingAlgorithm(integerArray);
+                // End timer
+                var endDate = new Date();
+                var seconds = (endDate.getTime() - startDate.getTime()) / 1000;
+                totalSeconds += seconds;
+            }
+
+            // Construct data object
+            data.push({
+                TotalSeconds: totalSeconds,
+                RunTimes: runTimes,
+                AverageRunTimeInSeconds: (totalSeconds / runTimes),
+                Arraylength: integerArray.length
+            });
+        }
+
+        // Print times
+        data.forEach(function (dataObject) {
+            console.log(dataObject);
+        });
+    }
+
+    function InsertionSort(array) {
+        for (let i = 0; i < array.length; i++) {
+            for (let j = i; j > 0 && less(array[j], array[j - 1]); j--) {
+                exch(array, j, j - 1);
+            }
+        }
+    }
+
+    function SelectionSort(array) {
+        for (let i = 0; i < array.length; i++) {
+            let min = i;
+            for (let j = i + 1; j < array.length; j++) {
+                if (less(array[j], array[min])) {
+                    min = j;
+                }
+            }
+            exch(array, i, min);
+        }
+    }
+
+    function MergeSort(array) {
+        if (array.length < 2){
+            return array;
+        }
+
+        var middle = parseInt(array.length / 2);
+        var left = array.slice(0, middle);
+        var right = array.slice(middle, array.length);
+
+        return Merge(MergeSort(left), MergeSort(right));
+    }
+
+    function Merge(left, right) {
+        var result = [];
+
+        while (left.length && right.length) {
+            if (left[0] <= right[0]) {
+                result.push(left.shift());
+            } else {
+                result.push(right.shift());
+            }
+        }
+
+        while (left.length){
+            result.push(left.shift());
+        }
+
+        while (right.length){
+            result.push(right.shift());
+        }
+
+        return result;
+    }
+
+    function less(v, w) {
+        return v < w;
+    }
+    function exch(a, i, j) {
+        let t = a[i]
+        a[i] = a[j];
+        a[j] = t;
+    }
+    function doubleArray(array, numDoublings) {
+        for (let i = 0; i < numDoublings; i++) {
+            let boundary = 0;
+            let newNumValues = 0;
+            let arrayValues = new Array();
+
+            if (array.length == 0) {
+                boundary = 1000;
+                newNumValues = boundary;
+
+                for (let i = 0; i < boundary; i++) {
+                    arrayValues.push(i);
+                }
+            }
+            else {
+                boundary = (array.length * 2);
+                newNumValues = boundary - array.length;
+
+                for (let i = 0; i < boundary; i++) {
+                    arrayValues.push(i);
+                }
+                arrayValues.splice(0, newNumValues);
+            }
+
+            for (let i = 0; i < arrayValues.length; i++) {
+                array.push(arrayValues[i]);
+            }
+        }
+    }
+    function shuffle(array) {
+        var currentIndex = array.length, temporaryValue, randomIndex;
+
+        // While there remain elements to shuffle...
+        while (0 !== currentIndex) {
+
+            // Pick a remaining element...
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+
+            // And swap it with the current element.
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+    }
+
+</script>
